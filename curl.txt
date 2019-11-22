@@ -1,0 +1,52 @@
+curl -v -X POST https://api.line.me/v2/bot/richmenu \
+-H 'Authorization: Bearer OsZl/cGwEraPJmbK3TuJfxioXJ0vZ4v7XeQBSUVt1qZzyVA7GqUftQhZR6sxO7XJbfHvm2vS4X02EXSoFHmdkMX36dLn8y9EqPlh8UrA3G+2LU2z846zvwpmWqqV8udc8P8e/pPCBPhO1AzY7qu/iAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json' \
+-d \
+'{
+    "size": {
+      "width": 1200,
+      "height": 405
+    },
+    "selected": false,
+    "name": "richmenu-test",
+    "chatBarText": "LINE LIFF 選單",
+    "areas": [
+      {
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": 600,
+          "height": 405
+        },
+        "action": {
+          "type": "uri",
+          "label": "網址",
+          "uri": "line://app/1653555120-WvE4rneG"
+        }
+      },
+      {
+        "bounds": {
+          "x": 600,
+          "y": 0,
+          "width": 600,
+          "height": 405
+        },
+        "action": {
+          "type": "uri",
+          "label": "網址",
+          "uri": "line://app/1653555120-pgynKLxN"
+        }
+      }
+   ]
+}'
+
+{"richMenuId":"richmenu-08c4d8c667c5985d6b3449f417790d02"}
+
+curl -v -X POST https://api.line.me/v2/bot/richmenu/richmenu-08c4d8c667c5985d6b3449f417790d02/content \
+-H "Authorization: Bearer OsZl/cGwEraPJmbK3TuJfxioXJ0vZ4v7XeQBSUVt1qZzyVA7GqUftQhZR6sxO7XJbfHvm2vS4X02EXSoFHmdkMX36dLn8y9EqPlh8UrA3G+2LU2z846zvwpmWqqV8udc8P8e/pPCBPhO1AzY7qu/iAdB04t89/1O/w1cDnyilFU=' \
+-H 'Content-Type: application/json" \
+-H "Content-Type: image/png" \
+-T /Users/toooair/Downloads/RichMenu_DesignTemplate/Compact/Medium/richmenu-template-guidem-02.png
+
+curl -v -X POST https://api.line.me/v2/bot/user/all/richmenu/richmenu-08c4d8c667c5985d6b3449f417790d02 \
+-H "Authorization: OsZl/cGwEraPJmbK3TuJfxioXJ0vZ4v7XeQBSUVt1qZzyVA7GqUftQhZR6sxO7XJbfHvm2vS4X02EXSoFHmdkMX36dLn8y9EqPlh8UrA3G+2LU2z846zvwpmWqqV8udc8P8e/pPCBPhO1AzY7qu/iAdB04t89/1O/w1cDnyilFU="
