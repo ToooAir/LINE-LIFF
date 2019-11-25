@@ -19,14 +19,14 @@ from linebot.models import (
 
 app = Flask(__name__)
 
-# ~ get channel_secret and channel_access_token from config.py~
+# config here
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
 
-# ~sample code'callback'~
+# messaging API here
 @app.route("/callback", methods=['POST'])
 def callback():
-    signature = request.headers['X-Line-Signature']
+    signature = request.headers["X-Line-Signature"]
 
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
@@ -36,49 +36,47 @@ def callback():
     except InvalidSignatureError:
         abort(400)
 
-    return 'OK'
+    return "OK"
 
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     line_bot_api.reply_message(
         event.reply_token, [
-            TextSendMessage(text=event.message.text+'(VScode)'),
-            TextSendMessage(text='(測試ing)')
+            TextSendMessage(text=event.message.text+"(VScode)"),
+            TextSendMessage(text="(測試ing)")
         ]
     )
 
 
-# ~website~
-@app.route("/", methods=['GET'])
+# website here
+@app.route("/", methods=["GET"])
 def index():
-    return render_template('index.html')
+    return render_template("index.html")
 
 
-@app.route('/static/<path:path>')
+@app.route("/static/<path:path>")
 def send_static(path):
-    return send_from_directory('static', path)
+    return send_from_directory("static", path)
 
-# ~AJAX POST~
-@app.route('/ajax', methods=['POST'])
+# AJAX POST
+@app.route("/ajax", methods=["POST"])
 def get_ajax():
     data = request.form
     print(data)
     resp = make_response(json.dumps(data))
     resp.status_code = 200
-    resp.headers['Access-Control-Allow-Origin'] = '*'
-
-
+    resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
 
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
-        usage='Usage: python ' + __file__ + ' [--port <port>] [--help]'
+        usage="Usage: python " + __file__ +  "[--port <port>] [--help]"
     )
-    arg_parser.add_argument('-p', '--port', default=8000, help='port')
-    arg_parser.add_argument('-d', '--debug', default=False, help='debug')
+    arg_parser.add_argument("-p", "--port", default=8000, help="port")
+    arg_parser.add_argument("-d", "--debug", default=False, help="debug")
     options = arg_parser.parse_args()
 
     app.run(debug=options.debug, port=options.port)

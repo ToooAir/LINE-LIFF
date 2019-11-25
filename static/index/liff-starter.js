@@ -5,11 +5,12 @@ window.onload = function (e) {
 };
 
 function initializeApp(data) {
-    document.getElementById('sendAJAX').addEventListener('click', function () {
+    $("#sendAJAX").click(function () {
         var user = data.context.userId;
-        var name = $('#outputName').val();
-        var email = $('#outputEmail').val();
-        var facebook = $('#outputFacebook').val();
+        var name = $("#outputName").val();
+        var email = $("#outputEmail").val();
+        var facebook = $("#outputFacebook").val();
+        var selfIntro = $("#outputSelfIntro").val();
         window.alert(user);
         $.ajax({
             type: "POST",
@@ -18,7 +19,8 @@ function initializeApp(data) {
                 user: user,
                 name: name,
                 email: email,
-                Facebook: facebook
+                facebook: facebook,
+                selfIntro: selfIntro
             },
             url: "/ajax",
             dataType: "json",
@@ -33,4 +35,3 @@ function initializeApp(data) {
         window.alert("send success");
     });
 }
-
