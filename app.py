@@ -1,4 +1,5 @@
 from config import config
+import alchemyFunc
 
 import os
 import sys
@@ -63,10 +64,16 @@ def send_static(path):
 @app.route("/ajax", methods=["POST"])
 def get_ajax():
     data = request.form
-    print(data)
-    resp = make_response(json.dumps(data))
-    resp.status_code = 200
-    resp.headers["Access-Control-Allow-Origin"] = "*"
+    print(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
+    if(alchemyFunc.checkRepeat(data["user"])):
+        resp = make_response("重複報名是在哈囉？")
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+    else:
+        alchemyFunc.addUser(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
+        resp = make_response(json.dumps(data))
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
 

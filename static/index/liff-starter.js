@@ -25,13 +25,13 @@ function initializeApp(data) {
             url: "/ajax",
             dataType: "json",
             success: function (data) {
+                alert(data);
                 console.log(data);
             },
             error: function (jqXHR) {
-                alert("error: " + jqXHR.status);
+                alert("error: " + jqXHR.responseText);
                 console.log(jqXHR);
             }
         })
-        window.alert("send success");
     });
 }
