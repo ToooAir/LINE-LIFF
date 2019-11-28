@@ -55,14 +55,18 @@ def message_text(event):
 def index():
     return render_template("index.html")
 
+@app.route("/check")
+def check():
+    return render_template("check.html")
+
 
 @app.route("/static/<path:path>")
 def send_static(path):
     return send_from_directory("static", path)
 
 # AJAX POST
-@app.route("/ajax", methods=["POST"])
-def get_ajax():
+@app.route("/signup", methods=["POST"])
+def signup():
     data = request.form
     print(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
     if(alchemyFunc.checkRepeat(data["user"])):
@@ -72,6 +76,21 @@ def get_ajax():
     else:
         alchemyFunc.addUser(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
         resp = make_response(json.dumps(data))
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
+
+@app.route("/getNumber", methods=["POST"])
+def getNumber():
+    data = request.form
+    print(data["user"])
+    if(alchemyFunc.checkRepeat(data["user"])):
+        resp = make_response(json.dumps(alchemyFunc.searchUserID(data["user"])))
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+    else:
+        resp = make_response("還沒報名啦")
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
 

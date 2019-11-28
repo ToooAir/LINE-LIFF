@@ -24,7 +24,7 @@ def searchUserID(searchLineid):
     session = DB_session()
     sUser = session.query(User).filter(User.lineid == searchLineid).first()
     session.close()
-    return sUser.lineid
+    return sUser.id
 
 
 def searchUserName(searchLineid):

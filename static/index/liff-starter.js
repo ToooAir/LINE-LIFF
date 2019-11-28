@@ -22,7 +22,7 @@ function initializeApp(data) {
                 facebook: facebook,
                 selfIntro: selfIntro
             },
-            url: "/ajax",
+            url: "/signup",
             dataType: "json",
             success: function (data) {
                 alert(data);
