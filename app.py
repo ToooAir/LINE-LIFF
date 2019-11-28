@@ -1,8 +1,11 @@
 from config import config
 import alchemyFunc
+import lineModel
 
 import os
 import sys
+import re
+
 from argparse import ArgumentParser
 
 from flask import Flask, request, abort, render_template, send_from_directory, make_response
@@ -15,7 +18,7 @@ from linebot.exceptions import (
     InvalidSignatureError
 )
 from linebot.models import (
-    MessageEvent, TextMessage, TextSendMessage,
+    MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
 )
 
 app = Flask(__name__)
@@ -42,18 +45,29 @@ def callback():
 
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
-    line_bot_api.reply_message(
-        event.reply_token, [
-            TextSendMessage(text=event.message.text+"(VScode)"),
-            TextSendMessage(text="(測試ing)")
-        ]
-    )
+    if(re.match("^[0-9]*$", event.message.text)):
+        userid = event.message.text
+        user = alchemyFunc.searchUser(userid)
+        flex = lineModel.flexmessage(user)
+        line_bot_api.reply_message(
+            event.reply_token, [
+                flex,
+            ]
+        )
+    else:
+        line_bot_api.reply_message(
+            event.reply_token, [
+                TextSendMessage(text=event.message.text+"(VScode)"),
+                TextSendMessage(text="(傳送的非數字無法查詢)")
+            ]
+        )
 
 
 # website here
 @app.route("/", methods=["GET"])
 def index():
     return render_template("index.html")
+
 
 @app.route("/check")
 def check():
@@ -68,25 +82,29 @@ def send_static(path):
 @app.route("/signup", methods=["POST"])
 def signup():
     data = request.form
-    print(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
+    print(data["user"], data["name"], data["email"],
+          data["facebook"], data["selfIntro"])
     if(alchemyFunc.checkRepeat(data["user"])):
         resp = make_response("重複報名是在哈囉？")
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
     else:
-        alchemyFunc.addUser(data["user"],data["name"],data["email"],data["facebook"],data["selfIntro"])
+        alchemyFunc.addUser(
+            data["user"], data["name"], data["email"], data["facebook"], data["selfIntro"])
         resp = make_response(json.dumps(data))
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
 
+
 @app.route("/getNumber", methods=["POST"])
 def getNumber():
     data = request.form
     print(data["user"])
     if(alchemyFunc.checkRepeat(data["user"])):
-        resp = make_response(json.dumps(alchemyFunc.searchUserID(data["user"])))
+        resp = make_response(json.dumps(
+            alchemyFunc.searchUserID(data["user"])))
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
     else:
@@ -99,7 +117,7 @@ def getNumber():
 
 if __name__ == "__main__":
     arg_parser = ArgumentParser(
-        usage="Usage: python " + __file__ +  "[--port <port>] [--help]"
+        usage="Usage: python " + __file__ + "[--port <port>] [--help]"
     )
     arg_parser.add_argument("-p", "--port", default=8000, help="port")
     arg_parser.add_argument("-d", "--debug", default=False, help="debug")

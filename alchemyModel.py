@@ -2,6 +2,7 @@ from alchemyStart import Base
 
 from sqlalchemy import Column, Integer, String
 
+
 class User(Base):
     __tablename__ = 'User'
     id = Column('id', Integer, primary_key=True, autoincrement=True)
