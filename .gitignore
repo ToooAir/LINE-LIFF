@@ -1,6 +1,6 @@
 *.json
 *.pyc
 .DS_Store
-*.png
-*.jpg
-*.jpeg
+/static/uploadImage/
+.vscode
+/__pycache__/

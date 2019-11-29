@@ -88,7 +88,7 @@ def signup():
     image = request.files["images"]
     filename = image.filename
     if(filename != ""):
-        image.save(os.path.join(imageSaveDir, filename))
+        image.save(os.path.join(imageSaveDir, data["user"]))
 
     if(alchemyFunc.checkRepeat(data["user"])):
         alchemyFunc.editUser(

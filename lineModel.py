@@ -2,6 +2,9 @@ from linebot.models import (
     MessageEvent, TextMessage, TextSendMessage, FlexSendMessage
 )
 
+url = "https://6ee45e28.ngrok.io/"
+direct = "static/uploadImage/" 
+
 
 def flexmessage(user):
     message = FlexSendMessage(
@@ -11,7 +14,7 @@ def flexmessage(user):
             "type": "bubble",
             "hero": {
                     "type": "image",
-                "url": "https://d17fnq9dkz9hgj.cloudfront.net/uploads/2012/11/152964589-welcome-home-new-cat-632x475.jpg",
+                "url": url+direct+user.lineid,
                 "size": "full",
                         "aspectRatio": "20:13",
                         "aspectMode": "cover",
