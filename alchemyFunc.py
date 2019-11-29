@@ -10,6 +10,16 @@ def addUser(addLineid, addName, addEmail, addFacebook, addIntro):
     session.commit()
     session.close()
 
+def editUser(editLineid, editName, editEmail, editFacebook, editIntro):
+    session = DB_session()
+    user = session.query(User).filter(User.lineid == editLineid).first()
+    user.name = editName
+    user.email = editEmail
+    user.facebook = editFacebook
+    user.intro = editIntro
+    session.commit()
+    session.close()
+
 
 # Search By LineID
 def checkRepeat(searchLineid):
@@ -43,3 +53,16 @@ def searchUser(searchID):
     sUser = session.query(User).filter(User.id == searchID).first()
     session.close()
     return sUser
+
+def searchMyself(searchLineid):
+    session = DB_session()
+    sUser = session.query(User).filter(User.lineid == searchLineid).first()
+    session.close()
+    json = {
+        "name":sUser.name,
+        "email":sUser.email,
+        "facebook":sUser.facebook,
+        "intro":sUser.intro,
+        "status":"編輯"
+    }
+    return json

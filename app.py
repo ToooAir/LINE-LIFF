@@ -26,7 +26,7 @@ app = Flask(__name__)
 # config here
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
-imageSaveDir = '/Users/toooair/Desktop/LINE-LIFF/static/uploadImage/'
+imageSaveDir = 'static/uploadImage/'
 
 # messaging API here
 @app.route("/callback", methods=['POST'])
@@ -83,24 +83,23 @@ def send_static(path):
 # AJAX POST
 @app.route("/signup", methods=["POST"])
 def signup():
-    # todo:檢查有沒有報名後帶回資料 有的話編輯
     data = request.form
+
     image = request.files["images"]
     filename = image.filename
-    if(filename!=""):
+    if(filename != ""):
         image.save(os.path.join(imageSaveDir, filename))
-        
-    print(data["user"], data["name"], data["email"],
-          data["facebook"], data["selfIntro"])
 
     if(alchemyFunc.checkRepeat(data["user"])):
-        resp = make_response("重複報名是在哈囉？")
+        alchemyFunc.editUser(
+            data["user"], data["name"], data["email"], data["facebook"], data["selfIntro"])
+        resp = make_response("修改")
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
     else:
         alchemyFunc.addUser(
             data["user"], data["name"], data["email"], data["facebook"], data["selfIntro"])
-        resp = make_response(json.dumps(data))
+        resp = make_response("報名")
         resp.status_code = 200
         resp.headers["Access-Control-Allow-Origin"] = "*"
 
@@ -123,6 +122,22 @@ def getNumber():
 
     return resp
 
+
+@app.route("/getStatus", methods=["POST"])
+def getStatus():
+    data = request.form
+    if(alchemyFunc.checkRepeat(data["user"])):
+        myself = alchemyFunc.searchMyself(data["user"])
+        resp = make_response(myself)
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+    else:
+        noUser = {"name":"","email":"","facebook":"","intro":"","status":"報名"}
+        resp = make_response(noUser)
+        resp.status_code = 200
+        resp.headers["Access-Control-Allow-Origin"] = "*"
+
+    return resp
 
 
 if __name__ == "__main__":
