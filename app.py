@@ -26,6 +26,7 @@ app = Flask(__name__)
 # config here
 line_bot_api = LineBotApi(config['LINE_CHANNEL_ACCESS_TOKEN'])
 handler = WebhookHandler(config['LINE_CHANNEL_SECRET'])
+imageSaveDir = '/Users/toooair/Desktop/LINE-LIFF/static/uploadImage/'
 
 # messaging API here
 @app.route("/callback", methods=['POST'])
@@ -46,6 +47,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def message_text(event):
     if(re.match("^[0-9]*$", event.message.text)):
+        # todo 檢查不存在的號碼 檢查完才查詢
         userid = event.message.text
         user = alchemyFunc.searchUser(userid)
         flex = lineModel.flexmessage(user)
@@ -81,9 +83,16 @@ def send_static(path):
 # AJAX POST
 @app.route("/signup", methods=["POST"])
 def signup():
+    # todo:檢查有沒有報名後帶回資料 有的話編輯
     data = request.form
+    image = request.files["images"]
+    filename = image.filename
+    if(filename!=""):
+        image.save(os.path.join(imageSaveDir, filename))
+        
     print(data["user"], data["name"], data["email"],
           data["facebook"], data["selfIntro"])
+
     if(alchemyFunc.checkRepeat(data["user"])):
         resp = make_response("重複報名是在哈囉？")
         resp.status_code = 200
@@ -113,6 +122,7 @@ def getNumber():
         resp.headers["Access-Control-Allow-Origin"] = "*"
 
     return resp
+
 
 
 if __name__ == "__main__":

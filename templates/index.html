@@ -9,11 +9,19 @@
 <body>
 
     <div>
-        <form class="submit">
+        <h1 id="status">狀態</h1>
+        <form id="myform" class="submit" encType="multipart/form-data">
             <input id="outputName" name="name" placeholder="姓名"><br>
             <input id="outputEmail" name="email" type="email" placeholder="信箱"><br>
             <input id="outputFacebook" name="facebook" type="url" placeholder="臉書網址"><br>
             <input id="outputSelfIntro" name="selfIntro" placeholder="自我介紹"><br>
+            <label class="button border black padding opacity round center">
+                <input type="file" accept=".png,.jpg,.bmpＦ" name="images" class="upload" style="display:none"></input>
+                <h7>CHOOSE FILE</h7>
+            </label>
+            <div id="previews">
+                <img id="previewIMG" class="padding" height='200'>
+            </div>
         </form>
         <button id="sendAJAX">送出</button>
     </div>
@@ -21,4 +29,5 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
     <script src="/static/index/liff-starter.js"></script>
+    <script src="/static/index/image.js"></script>
 </body>
